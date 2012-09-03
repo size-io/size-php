@@ -15,7 +15,7 @@ Using [size-io/size-proxy](https://github.com/size-io/size-proxy):
  * TCP client interface: no additional modules
  * Redis client interface: [nicolasff/phpredis](https://github.com/nicolasff/phpredis) needs to be installed
 
-Direct access to the platform (no proxy) requires [PHP Curl](http://www.php.net/manual/en/book.curl.php)
+Direct access to the platform (no proxy) requires [Curl](http://www.php.net/manual/en/book.curl.php)
 
 ## Using the PHP API
 
@@ -32,7 +32,7 @@ $size->publishEvent('api.get', 1);
 
 ### TCP Proxy Event Publishing
 
-Using the TCP interface to a running [size-io/size-proxy](https://github.com/size-io/size-proxy) is still pretty fast and has the added benefit of complaining if for some reason it cannot connect to the proxy server.  On a LAN or local machine it will have pretty much no measurable impact on performance.
+Using the TCP interface to a running [size-io/size-proxy](https://github.com/size-io/size-proxy) is still pretty fast and has the added benefit of complaining if for some reason it cannot connect to the proxy server.  On a LAN or local machine it will have essentially no measurable impact on performance.
 
 ```php
 require_once('size.php');
@@ -43,7 +43,7 @@ $size->publishEvent('api.get', 1);
 
 ### Redis Proxy Event Publishing
 
-Using the Redis interface to a running [size-io/size-proxy](https://github.com/size-io/size-proxy) is basically supplied for API completeness.  It has no advantages over the TCP Proxy Interface noted above.  It requires the [nicolasff/phpredis](https://github.com/nicolasff/phpredis) to be installed.  That said, it is still pretty fast and will complain if it cannot connect to the proxy server.
+Using the Redis interface to a running [size-io/size-proxy](https://github.com/size-io/size-proxy) is basically supplied for API completeness.  For publishing events, it has no advantages over the TCP Proxy Interface noted above.It is, however, well suited for subscribing to events.  It requires [nicolasff/phpredis](https://github.com/nicolasff/phpredis) to be installed.  On a LAN or local machine, it is fast and will complain if it cannot connect to the proxy server.
 
 ```php
 require_once('size.php');
@@ -54,7 +54,7 @@ $size->publishEvent('api.get', 1);
 
 ### Direct Access to the Platform
 
-If you operate in an environment where you cannot install a local [size-io/size-proxy](https://github.com/size-io/size-proxy), you can publish events to the platform directly by consuming the [RESTful Event Publisher API](http://size.io/developer/api/publish/rest).  This requires that [PHP Curl](http://www.php.net/manual/en/book.curl.php) be installed. Simply set the proxy settings to `null` and publish the event like normal.  Depending on ambient Internet conditions, this may have a measurable impact on performance, though no different than any other RESTful API out there.
+If you operate in an environment where you cannot install a local [size-io/size-proxy](https://github.com/size-io/size-proxy), you can publish events to the platform directly by consuming the [RESTful Event Publisher API](http://size.io/developer/api/publish/rest).  This requires that [Curl](http://www.php.net/manual/en/book.curl.php) be installed. Simply set the proxy settings to `null` and publish the event like normal.  Depending on ambient Internet conditions, this may have a measurable impact on performance, though no more so than any other RESTful API out there.
 
 ```php
 require_once('size.php');
@@ -62,3 +62,4 @@ $size = SizeClient::getInstance();
 $size->setProxyAPI(null);
 $size->publishEvent('api.get', 1);
 ```
+

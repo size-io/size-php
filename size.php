@@ -37,7 +37,7 @@ class SizeClient {
 	protected $publisherRestURL = 'http://api.size.io/v1.0/event/publish';
 
 	private function __construct() {
-		$envPublisherToken = getenv("SIZE_PUBLISHER_TOKEN");
+		$envPublisherToken = getenv('SIZE_PUBLISHER_TOKEN');
 		if ($this->publisherAccessToken === '00000000-0000-0000-0000-000000000000' && $envPublisherToken )
 			$this->publisherAccessToken = $envPublisherToken;
 	}
@@ -87,8 +87,8 @@ class SizeClient {
 	}
 
 	public function publishEvent($key, $val, $time=null) {
-		$this->sanitizeKey($key);
-		$this->sanitizeVal($val);
+		$this->validateKey($key);
+		$this->validateVal($val);
 		if ($this->useProxy)
 			return $this->proxyPublishEvent($key, $val, $time);
 		else
@@ -199,7 +199,10 @@ class SizeClient {
 		$message = '';
 		switch ($messageType) {
 			case 'event':
-				$message = ($time ? "$time|" : "") . "$key|$val";
+				if ($time)
+					$message = json_encode(array('k'=>$key, 'v'=>$val, 't'=>$time));
+				else
+					$message = json_encode(array('k'=>$key, 'v'=>$val));
 				break;
 			default:
 				throw new SizeClientException("Unrecognized proxy message type: '$messageType'");
@@ -212,13 +215,13 @@ class SizeClient {
 		return $message;
 	}
 
-	protected function sanitizeKey($key) {
+	protected function validateKey($key) {
 		if (preg_match('/[^a-zA-Z0-9_.-]/', $key))
 			throw new SizeClientException("Invalid key: '$key'. Valid values are [a-zA-Z0-9_.-]");
 		return $key;
 	}
 
-	protected function sanitizeVal($val) {
+	protected function validateVal($val) {
 		if (preg_match('/[^0-9.]/', $val))
 			throw new SizeClientException("Invalid key: '$val'. Valid values are [0-9.]");
 		return (int) $val;
